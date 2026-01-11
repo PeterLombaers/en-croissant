@@ -106,6 +106,7 @@ function GameNotation({ topBar }: { topBar?: boolean }) {
                 start={headers.start}
                 showVariations={showVariations}
                 showComments={showComments}
+                isAfterComment={!!root.comment}
                 path={[]}
               />
             </Box>
@@ -184,6 +185,7 @@ const RenderVariationTree = memo(
     first,
     showVariations,
     showComments,
+    isAfterComment,
     targetRef,
     path,
   }: {
@@ -193,6 +195,7 @@ const RenderVariationTree = memo(
     first?: boolean;
     showVariations: boolean;
     showComments: boolean;
+    isAfterComment: boolean;
     targetRef: React.RefObject<HTMLSpanElement>;
     path: number[];
   }) {
@@ -212,6 +215,9 @@ const RenderVariationTree = memo(
                 movePath={newPath}
                 showComments={showComments}
                 isStart={equal(newPath, start)}
+                // Variations are on a new line, so we never treat them as
+                // right after a comment:
+                isAfterComment={false}
                 first
               />
               <RenderVariationTree
@@ -221,6 +227,7 @@ const RenderVariationTree = memo(
                 first
                 showVariations={showVariations}
                 showComments={showComments}
+                isAfterComment={!!variation.comment}
                 start={start}
                 path={newPath}
               />
@@ -243,12 +250,12 @@ const RenderVariationTree = memo(
             movePath={newPath}
             showComments={showComments}
             isStart={equal(newPath, start)}
+            isAfterComment={isAfterComment}
             first={first}
           />
         )}
 
         <VariationCell moveNodes={variationNodes} />
-
         {tree.children.length > 0 && (
           <RenderVariationTree
             targetRef={targetRef}
@@ -257,6 +264,7 @@ const RenderVariationTree = memo(
             showVariations={showVariations}
             start={start}
             showComments={showComments}
+            isAfterComment={!!variations[0].comment}
             path={newPath}
           />
         )}

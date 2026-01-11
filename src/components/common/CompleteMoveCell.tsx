@@ -47,6 +47,7 @@ function CompleteMoveCell({
   showComments,
   first,
   isStart,
+  isAfterComment,
   targetRef,
 }: {
   halfMoves: number;
@@ -57,6 +58,7 @@ function CompleteMoveCell({
   fen?: string;
   first?: boolean;
   isStart: boolean;
+  isAfterComment: boolean;
   movePath: number[];
   targetRef: React.RefObject<HTMLSpanElement>;
 }) {
@@ -74,7 +76,7 @@ function CompleteMoveCell({
 
   const moveNumber = Math.ceil(halfMoves / 2);
   const isWhite = halfMoves % 2 === 1;
-  const hasNumber = halfMoves > 0 && (first || isWhite);
+  const hasNumber = halfMoves > 0 && (first || isWhite || isAfterComment);
   const ref = useClickOutside(() => {
     setOpen(false);
   });
@@ -178,6 +180,7 @@ export default memo(CompleteMoveCell, (prev, next) => {
     prev.first === next.first &&
     prev.isStart === next.isStart &&
     equal(prev.movePath, next.movePath) &&
-    prev.halfMoves === next.halfMoves
+    prev.halfMoves === next.halfMoves &&
+    prev.isAfterComment === next.isAfterComment
   );
 });
